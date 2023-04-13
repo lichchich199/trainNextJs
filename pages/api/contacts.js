@@ -3,13 +3,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-    console.log('vào API')
     if(req.method !== 'POST') {
         return res.status(405).json({message: 'Method not allowed'});
     }
 
     const contactData = JSON.parse(req.body)
-    console.log('contactData', contactData)
     var contact;
     switch (contactData?.mode) {
         case 'GET':
@@ -42,6 +40,10 @@ export default async (req, res) => {
                 },
                 data: contactData
             })
+            break;
+        case 'GETLIST':
+            delete contactData.mode;
+            contact = await prisma.contact.findMany();
             break;
     
         default:

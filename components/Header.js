@@ -30,7 +30,7 @@ export default function Header() {
                         router.push('/account/login')
                     }}
                 >
-                <p>Logout</p>
+                <p>{data?.isLoggedIn ? 'Logout' : 'Login'}</p>
                 </a>
             </li>
             </ul>

@@ -12,7 +12,7 @@ function logoutRoute(req, res) {
 export default withIronSessionApiRoute(logoutRoute, {
     cookieName: "MYSITECOOKIE",
     cookieOptions: {
-      secure: process.env.NODE_ENV === "production" ? true : false
+      secure: false
     },
     password: '2gyZ3GDw3LHZQKDhPmPDL3sjREVRXPr8'
   })

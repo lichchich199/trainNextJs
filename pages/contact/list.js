@@ -1,25 +1,40 @@
 import Link from "next/link"
 import { Layout } from "../../components/Layout"
 import { PrismaClient } from '@prisma/client'
-import Router from 'next/router'
+import { useState } from "react";
 
 const prisma = new PrismaClient();
 
 export default function List({initialContacts}) {
+    var [contactList, setContactList] = useState(initialContacts);
+
+    //handle deleteContact
     async function deleteContact(id){
-        var body = {
-            id: id,
-            mode: 'DELETE'
-        }
-        const response = await fetch('/api/contacts', {
+        const responseDelete = await fetch('/api/contacts', {
             method: 'POST',
-            body: JSON.stringify(body),
+            body: JSON.stringify({
+                id: id,
+                mode: 'DELETE'
+            }),
+        }).catch(error => {
+            throw(error)
         })
-        console.log(JSON.stringify(body))
-        if(!response.ok) {
-            throw new Error(response.statusText)
+        if(!responseDelete.ok) {
+            throw new Error(responseDelete.statusText)
         }
-        return await response.json()
+        const responseList = await fetch('/api/contacts', {
+            method: 'POST',
+            body: JSON.stringify({
+                mode: 'GETLIST'
+            }),
+        }).catch(error => {
+            throw(error)
+        })
+        if(!responseList.ok) {
+            throw new Error(responseList.statusText)
+        }
+        var data = await responseList.json()
+        setContactList(data)
     }
 
     return(
@@ -39,7 +54,7 @@ export default function List({initialContacts}) {
                 </thead>
                 <tbody>
                     {
-                        initialContacts.map((contact, index) => {
+                        contactList.map((contact, index) => {
                             return(
                                 <tr key={contact.id}>
                                     <th scope="row"><Link href={`/contact/edit/${contact.id}`}>{++index}</Link> </th>
@@ -50,7 +65,6 @@ export default function List({initialContacts}) {
                                     <td>
                                         <button type="button" className="btn btn-secondary" onClick={() => {
                                             deleteContact(contact.id)
-                                            Router.push('/contact/list')
                                         }}>Delete</button>
                                     </td>
 

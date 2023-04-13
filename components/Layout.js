@@ -9,7 +9,7 @@ function Layout({ children }) {
 
         <>
       <Head>
-        <title>With Iron Session</title>
+        <title>Excercise NextJs</title>
       </Head>
       <Header />
       <main>

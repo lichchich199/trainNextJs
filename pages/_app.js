@@ -1,9 +1,14 @@
 import '../styles/globals.css';
-import Head from 'next/head';
-import { SWRConfig } from 'swr';
-import fetchJson from '../lib/fetchJson'
-// add bootstrap css 
 import 'bootstrap/dist/css/bootstrap.css'
+
+import { SWRConfig } from 'swr';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+import { allReducers } from '../redux/reducers';
+import fetchJson from '../lib/fetchJson'
+
+const store = createStore(allReducers);
 
 export default function MyApp({ Component, pageProps }) {
   return (
@@ -14,7 +19,9 @@ export default function MyApp({ Component, pageProps }) {
             console.log(err)
           }
         }}>
-        <Component {...pageProps} />  
+          <Provider store={store}>
+              <Component {...pageProps} />
+          </Provider>
     </SWRConfig>
   )
 }
